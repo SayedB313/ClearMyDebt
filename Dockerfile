@@ -3,7 +3,9 @@ FROM node:22-alpine AS base
 FROM base AS builder
 WORKDIR /app
 COPY package.json package-lock.json ./
+ENV NODE_ENV=development
 RUN npm ci
+ENV NODE_ENV=production
 COPY . .
 RUN npx prisma generate
 RUN npm run build
