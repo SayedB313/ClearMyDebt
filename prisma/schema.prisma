@@ -1,0 +1,194 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ProviderType {
+  LIT       // Licensed Insolvency Trustee (Canada)
+  LAWYER    // Bankruptcy lawyer/attorney
+  COUNSELOR // Credit counselor
+  SETTLEMENT // Debt settlement company
+}
+
+enum ProviderTier {
+  FREE
+  VERIFIED  // $49/mo
+  PREMIUM   // $149/mo
+}
+
+enum Country {
+  CA
+  US
+}
+
+enum LeadType {
+  CONTACT_FORM
+  CALL
+  CONSULTATION_REQUEST
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  CONVERTED
+  CLOSED
+}
+
+model Provider {
+  id                 String       @id @default(cuid())
+  name               String
+  slug               String       @unique
+  type               ProviderType
+  licenseNumber      String?
+  licenseVerifiedAt  DateTime?
+  licenseSourceUrl   String?
+  provinceOrState    String
+  city               String
+  postalCode         String?
+  lat                Float?
+  lng                Float?
+  phone              String?
+  email              String?
+  website            String?
+  description        String?      @db.Text
+  specialties        String[]
+  languages          String[]
+  feeStructure       String?
+  feeRangeLow        Int?
+  feeRangeHigh       Int?
+  yearsInPractice    Int?
+  casesHandled       Int?
+  tier               ProviderTier @default(FREE)
+  claimed            Boolean      @default(false)
+  claimedAt          DateTime?
+  claimUserId        String?
+  stripeCustomerId   String?
+  stripeSubscriptionId String?
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+
+  reviews  Review[]
+  leads    Lead[]
+  cityRef  City?    @relation(fields: [cityId], references: [id])
+  cityId   String?
+
+  @@index([provinceOrState, city])
+  @@index([type])
+  @@index([tier])
+  @@map("providers")
+}
+
+model City {
+  id              String  @id @default(cuid())
+  name            String
+  slug            String
+  provinceOrState String
+  country         Country
+  population      Int?
+  lat             Float?
+  lng             Float?
+  content         String? @db.Text
+  providerCount   Int     @default(0)
+
+  providers    Provider[]
+  cityServices CityService[]
+
+  @@unique([slug, provinceOrState])
+  @@index([country])
+  @@map("cities")
+}
+
+model ProvinceState {
+  id            String  @id @default(cuid())
+  name          String
+  slug          String  @unique
+  country       Country
+  content       String? @db.Text
+  providerCount Int     @default(0)
+  cityCount     Int     @default(0)
+
+  @@map("provinces_states")
+}
+
+model Service {
+  id                  String  @id @default(cuid())
+  name                String
+  slug                String  @unique
+  description         String? @db.Text
+  countryAvailability Country? // null = both
+
+  cityServices CityService[]
+
+  @@map("services")
+}
+
+model CityService {
+  id              String  @id @default(cuid())
+  content         String? @db.Text
+  faqJson         String? @db.Text
+  metaTitle       String?
+  metaDescription String?
+  providerCount   Int     @default(0)
+
+  city      City    @relation(fields: [cityId], references: [id])
+  cityId    String
+  service   Service @relation(fields: [serviceId], references: [id])
+  serviceId String
+
+  @@unique([cityId, serviceId])
+  @@map("city_services")
+}
+
+model Review {
+  id                    String   @id @default(cuid())
+  rating                Int      // 1-5
+  feeTransparencyScore  Int?     // 1-5
+  communicationScore    Int?     // 1-5
+  text                  String?  @db.Text
+  verifiedFiler         Boolean  @default(false)
+  createdAt             DateTime @default(now())
+
+  provider   Provider @relation(fields: [providerId], references: [id])
+  providerId String
+  userId     String?
+
+  @@index([providerId])
+  @@map("reviews")
+}
+
+model Lead {
+  id        String     @id @default(cuid())
+  email     String     // hashed
+  type      LeadType
+  status    LeadStatus @default(NEW)
+  createdAt DateTime   @default(now())
+
+  provider   Provider @relation(fields: [providerId], references: [id])
+  providerId String
+
+  @@index([providerId])
+  @@map("leads")
+}
+
+model BlogPost {
+  id              String    @id @default(cuid())
+  title           String
+  slug            String    @unique
+  content         String    @db.Text
+  excerpt         String?   @db.Text
+  metaTitle       String?
+  metaDescription String?
+  category        String?
+  tags            String[]
+  schemaJson      String?   @db.Text
+  publishedAt     DateTime?
+  updatedAt       DateTime  @updatedAt
+  createdAt       DateTime  @default(now())
+
+  @@index([category])
+  @@index([publishedAt])
+  @@map("blog_posts")
+}

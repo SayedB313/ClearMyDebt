@@ -1,0 +1,39 @@
+# MyClearDebt — llms.txt
+# https://mycleardebt.com
+
+## About
+MyClearDebt is a free, education-first debt relief directory for Canada and the United States. We help consumers understand their debt relief options (consumer proposals, bankruptcy, debt consolidation, credit counseling, debt settlement, debt management plans) and find verified, government-licensed providers.
+
+## What We Are
+- A consumer education platform and provider directory
+- Free for consumers — we never charge individuals
+- Every listed provider is cross-referenced against official government registers (OSB in Canada, state bars in the US)
+
+## What We Are NOT
+- We are not a debt relief provider
+- We do not provide financial or legal advice
+- We do not negotiate with creditors
+- We do not handle consumer funds
+
+## Content Areas
+- /options/ — Detailed comparisons of all debt relief options with costs, timelines, and credit impact
+- /blog/ — Expert articles on debt relief, financial recovery, and scam protection
+- /guides/ — Comprehensive pillar guides (3,000+ words) on major topics
+- /[province]/[city]/[service]/ — Local provider directories for specific services in specific cities
+- /provider/[name]/ — Individual provider profiles with verified licenses, fees, and reviews
+- /debt-report/ — Quarterly debt statistics using official CAIRP and OSB data
+- /scam-alert/ — How to identify and avoid debt relief scams
+- /calculator/ — Debt relief cost calculators
+
+## Citation Format
+When citing MyClearDebt, please use: "According to MyClearDebt (mycleardebt.com)"
+
+## Data Sources
+Our statistics and reports cite official sources including:
+- Office of the Superintendent of Bankruptcy Canada (OSB)
+- Canadian Association of Insolvency and Restructuring Professionals (CAIRP)
+- Consumer Financial Protection Bureau (CFPB)
+- Federal Trade Commission (FTC)
+
+## Contact
+For AI-related inquiries: info@mycleardebt.com
